@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Office.Tools.Ribbon;
-using Excel = Microsoft.Office.Interop.Excel;
-namespace OrfoSpellChecker
+﻿namespace OrfoSpellChecker
 {
+    using System.Linq;
+    using Microsoft.Office.Tools.Ribbon;
+    using Excel = Microsoft.Office.Interop.Excel;
     public partial class OrfoSpellCheckerRibbon
     {
         private void OrfoSpellCheckerRibbon_Load(object sender, RibbonUIEventArgs e)
@@ -17,36 +14,34 @@ namespace OrfoSpellChecker
         {
             var excel = Globals.ThisAddIn.Application;
             var wss = excel.Worksheets;
-            var app = excel.Application;
-            foreach (var ws in wss)
+            foreach (var ws in wss.OfType<Excel.Worksheet>())
             {
-                var sheet = ws as Excel.Worksheet;
-                if (sheet != null)
-                {
-                    var range = sheet.UsedRange;
-                    foreach (var cll in range)
-                    {
-                        var cell = cll as Excel.Range;
-                        SpellCheck.SpellChecker(cell);
-                    }
-                }
+                SpellCheck.SpellCheckOnSheet(ws);
             }
         }
-
+      
         private void OSCCheckCurrentTab_Click(object sender, RibbonControlEventArgs e)
         {
             var excel = Globals.ThisAddIn.Application;
-            var app = excel.Application;
-            var sheet = app.ActiveSheet as Excel.Worksheet;
-            if (sheet != null)
-            {
-                var range = sheet.UsedRange;
-                foreach (var cll in range)
-                {
-                    var cell = cll as Excel.Range;
-                    SpellCheck.SpellChecker(cell);
-                }
-            }
+            SpellCheck.SpellCheckOnSheet(excel.ActiveSheet);
         }
+
+        private void OSCAutoCheck_Click(object sender, RibbonControlEventArgs e)
+        {
+            var excel = Globals.ThisAddIn.Application;
+            if (OSCAutoCheck.Checked)
+            {
+                excel.Cells.Worksheet.Change += SpellCheck.Worksheet_Change;
+            }
+            else
+            {
+                excel.Cells.Worksheet.Change -= SpellCheck.Worksheet_Change;
+            }
+
+        }
+
+        
+
+        
     }
 }

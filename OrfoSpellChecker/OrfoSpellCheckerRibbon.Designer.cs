@@ -35,11 +35,12 @@
         private void InitializeComponent()
         {
             this.tab1 = this.Factory.CreateRibbonTab();
-            this.group1 = this.Factory.CreateRibbonGroup();
             this.OrfoSpellCheckerTab = this.Factory.CreateRibbonTab();
             this.OrfoSpellCheckerTabGroup = this.Factory.CreateRibbonGroup();
             this.OSCCheckAll = this.Factory.CreateRibbonButton();
             this.OSCCheckCurrentTab = this.Factory.CreateRibbonButton();
+            this.separator1 = this.Factory.CreateRibbonSeparator();
+            this.OSCAutoCheck = this.Factory.CreateRibbonToggleButton();
             this.tab1.SuspendLayout();
             this.OrfoSpellCheckerTab.SuspendLayout();
             this.OrfoSpellCheckerTabGroup.SuspendLayout();
@@ -47,14 +48,8 @@
             // tab1
             // 
             this.tab1.ControlId.ControlIdType = Microsoft.Office.Tools.Ribbon.RibbonControlIdType.Office;
-            this.tab1.Groups.Add(this.group1);
             this.tab1.Label = "TabAddIns";
             this.tab1.Name = "tab1";
-            // 
-            // group1
-            // 
-            this.group1.Label = "group1";
-            this.group1.Name = "group1";
             // 
             // OrfoSpellCheckerTab
             // 
@@ -66,6 +61,8 @@
             // 
             this.OrfoSpellCheckerTabGroup.Items.Add(this.OSCCheckAll);
             this.OrfoSpellCheckerTabGroup.Items.Add(this.OSCCheckCurrentTab);
+            this.OrfoSpellCheckerTabGroup.Items.Add(this.separator1);
+            this.OrfoSpellCheckerTabGroup.Items.Add(this.OSCAutoCheck);
             this.OrfoSpellCheckerTabGroup.Label = "OrfoSpellCheck";
             this.OrfoSpellCheckerTabGroup.Name = "OrfoSpellCheckerTabGroup";
             // 
@@ -80,6 +77,16 @@
             this.OSCCheckCurrentTab.Label = "Check Current Tab";
             this.OSCCheckCurrentTab.Name = "OSCCheckCurrentTab";
             this.OSCCheckCurrentTab.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.OSCCheckCurrentTab_Click);
+            // 
+            // separator1
+            // 
+            this.separator1.Name = "separator1";
+            // 
+            // OSCAutoCheck
+            // 
+            this.OSCAutoCheck.Label = "Auto Checking";
+            this.OSCAutoCheck.Name = "OSCAutoCheck";
+            this.OSCAutoCheck.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.OSCAutoCheck_Click);
             // 
             // OrfoSpellCheckerRibbon
             // 
@@ -100,11 +107,12 @@
         #endregion
 
         internal Microsoft.Office.Tools.Ribbon.RibbonTab tab1;
-        internal Microsoft.Office.Tools.Ribbon.RibbonGroup group1;
         internal Microsoft.Office.Tools.Ribbon.RibbonTab OrfoSpellCheckerTab;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup OrfoSpellCheckerTabGroup;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton OSCCheckAll;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton OSCCheckCurrentTab;
+        internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton OSCAutoCheck;
+        internal Microsoft.Office.Tools.Ribbon.RibbonSeparator separator1;
     }
 
     partial class ThisRibbonCollection

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Excel = Microsoft.Office.Interop.Excel;
-namespace OrfoSpellChecker
+﻿namespace OrfoSpellChecker
 {
+    using System;
+    using System.Linq;
+    using Excel = Microsoft.Office.Interop.Excel;
     public static class SpellCheck
     {
         public static void SpellChecker(Excel.Range target)
@@ -13,7 +11,7 @@ namespace OrfoSpellChecker
             string str = target.Text.ToString();
             if (app.CheckSpelling(str, Type.Missing, true) == false)
             {
-                foreach (string tmp in ((string) str).Split(' '))
+                foreach (var tmp in str.Split(' '))
                 {
                     if (app.CheckSpelling(tmp, Type.Missing, Type.Missing) == false)
                     {
@@ -23,17 +21,17 @@ namespace OrfoSpellChecker
                         }
                         else
                         {
-                            Excel.Characters c = target.Comment.Shape.TextFrame.Characters(Type.Missing, Type.Missing);
+                            var c = target.Comment.Shape.TextFrame.Characters(Type.Missing, Type.Missing);
                             if (!c.Caption.Contains(tmp))
                             {
                                 c.Caption = c.Caption + " " + tmp;
                             }
                         }
-                        setFontColor(target, str.IndexOf(tmp) + 1, tmp.Length, 3);
+                        SetFontColor(target, str.IndexOf(tmp, StringComparison.Ordinal) + 1, tmp.Length, 3);
                     }
                     else
                     {
-                        setFontColor(target, str.IndexOf(tmp) + 1, tmp.Length, 0);
+                        SetFontColor(target, str.IndexOf(tmp, StringComparison.Ordinal) + 1, tmp.Length, 0);
                     }
                 }
             }
@@ -43,7 +41,7 @@ namespace OrfoSpellChecker
                 {
                     if (target.Comment.Shape.AlternativeText.Contains("Ошибка в слове "))
                     {
-                        setFontColor(target, str.IndexOf(str) + 1, str.Length, 0);
+                        SetFontColor(target, str.IndexOf(str, StringComparison.Ordinal) + 1, str.Length, 0);
                         target.Comment.Delete();
                     }
                 }
@@ -51,9 +49,23 @@ namespace OrfoSpellChecker
 
         }
 
-        private static void setFontColor(Excel.Range target, int startIdx, int strLen, int colorIndex)
+        private static void SetFontColor(Excel.Range target, int startIdx, int strLen, int colorIndex)
         {
             target.Characters[startIdx, strLen].Font.ColorIndex = colorIndex;
+        }
+
+        public static void Worksheet_Change(Excel.Range target)
+        {
+            SpellChecker(target);
+        }
+        public static void SpellCheckOnSheet(Excel.Worksheet sheet)
+        {
+            if (sheet == null) return;
+            var range = sheet.UsedRange;
+            foreach (var cell in range.OfType<Excel.Range>())
+            {
+                Worksheet_Change(cell);
+            }
         }
     }
 }
